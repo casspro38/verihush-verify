@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VeriHush - Evidence Verification</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#071325;color:#FFF;min-height:100vh}
+.container{max-width:600px;margin:0 auto;padding:20px}
+.header{text-align:center;padding:40px 0 30px}
+.logo{font-size:32px;font-weight:800;color:#4D8EFF;letter-spacing:1px}
+.subtitle{color:#8899AA;font-size:14px;margin-top:6px}
+.card{background:#0F2140;border:1px solid #1A3055;border-radius:16px;padding:24px;margin-bottom:16px}
+.shield{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:36px}
+.shield-green{background:rgba(16,185,129,0.15);color:#10B981}
+.shield-red{background:rgba(255,84,81,0.15);color:#FF5451}
+.shield-blue{background:rgba(77,142,255,0.15);color:#4D8EFF}
+.field{margin-bottom:16px}
+.field-label{color:#8899AA;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.field-value{color:#FFF;font-size:14px;word-break:break-all}
+input[type="text"]{width:100%;padding:14px 16px;background:#071325;border:1px solid #1A3055;border-radius:12px;color:#FFF;font-size:14px;font-family:monospace;outline:none}
+input[type="text"]:focus{border-color:#4D8EFF}
+input::placeholder{color:#556677}
+.btn{width:100%;padding:14px;background:#4D8EFF;color:#FFF;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:background 0.2s}
+.btn:hover{background:#3A7BFF}
+.btn:disabled{background:#334455;cursor:not-allowed}
+.hash-box{background:#071325;border:1px solid #1A3055;border-radius:8px;padding:12px;font-family:monospace;font-size:12px;color:#4D8EFF;word-break:break-all;line-height:1.6}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600}
+.badge-green{background:rgba(16,185,129,0.15);color:#10B981;border:1px solid rgba(16,185,129,0.3)}
+.badge-red{background:rgba(255,84,81,0.15);color:#FF5451;border:1px solid rgba(255,84,81,0.3)}
+.badge-blue{background:rgba(77,142,255,0.15);color:#4D8EFF;border:1px solid rgba(77,142,255,0.3)}
+.footer{text-align:center;padding:30px 0;color:#556677;font-size:12px}
+.loading{display:none;text-align:center;padding:40px}
+.spinner{width:40px;height:40px;border:3px solid #1A3055;border-top:3px solid #4D8EFF;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.hidden{display:none}
+.divider{height:1px;background:#1A3055;margin:16px 0}
+.chain-entry{padding:12px;background:#071325;border-radius:8px;margin-bottom:8px;border:1px solid #1A3055}
+.chain-header{display:flex;justify-content:space-between;margin-bottom:6px}
+.chain-num{color:#4D8EFF;font-size:12px;font-weight:600}
+.chain-time{color:#8899AA;font-size:11px}
+.chain-hash{font-family:monospace;font-size:11px;color:#4D8EFF;word-break:break-all}
+.chain-prev{font-family:monospace;font-size:10px;color:#556677;margin-top:4px}
+.cert-box{text-align:center;background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.2)}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="logo">VeriHush</div>
+<div class="subtitle">Evidence Integrity Verification</div>
+</div>
+
+<div id="searchSection">
+<div class="card">
+<div class="shield shield-blue">V</div>
+<h2 style="text-align:center;margin-bottom:8px">Verify Evidence</h2>
+<p style="text-align:center;color:#8899AA;font-size:13px;margin-bottom:24px">Enter the SHA-256 hash from your evidence report to verify its integrity</p>
+<div class="field">
+<label class="field-label">SHA-256 Hash</label>
+<input type="text" id="hashInput" placeholder="e.g. 6c3df79e25f0e72e..." />
+</div>
+<div style="height:12px"></div>
+<button class="btn" id="verifyBtn" onclick="verifyHash()">Verify Hash</button>
+</div>
+<div class="card" style="text-align:center">
+<p style="color:#8899AA;font-size:13px">This verification system confirms that digital evidence collected through VeriHush has not been altered since its original capture. Each piece of evidence is protected by SHA-256 cryptographic hashing and chain-of-custody logging.</p>
+</div>
+</div>
+
+<div id="loadingSection" class="loading">
+<div class="spinner"></div>
+<p style="color:#8899AA">Verifying hash integrity...</p>
+</div>
+
+<div id="resultSection" class="hidden"></div>
+
+<div class="footer">&copy; 2026 VeriHush &middot; Evidence Integrity Platform</div>
+</div>
+
+<script>
+const API_URL = 'https://uwhujoaayaocpkigvyzp.supabase.co/functions/v1/verify-hash';
+
+window.onload = function() {
+  const params = new URLSearchParams(window.location.search);
+  const hash = params.get('hash');
+  const id = params.get('id');
+  if (hash) {
+    document.getElementById('hashInput').value = hash;
+    verifyHash();
+  } else if (id) {
+    verifyById(id);
+  }
+};
+
+async function verifyHash() {
+  const hash = document.getElementById('hashInput').value.trim();
+  if (!hash) { alert('Please enter a hash value'); return; }
+  
+  document.getElementById('searchSection').classList.add('hidden');
+  document.getElementById('loadingSection').style.display = 'block';
+  document.getElementById('resultSection').classList.add('hidden');
+
+  try {
+    const res = await fetch(API_URL + '?hash=' + encodeURIComponent(hash));
+    const data = await res.json();
+    document.getElementById('loadingSection').style.display = 'none';
+    
+    if (data.verified) {
+      showVerified(data);
+    } else {
+      showNotFound(hash);
+    }
+  } catch (e) {
+    document.getElementById('loadingSection').style.display = 'none';
+    showError(e.message);
+  }
+}
+
+async function verifyById(id) {
+  document.getElementById('searchSection').classList.add('hidden');
+  document.getElementById('loadingSection').style.display = 'block';
+
+  try {
+    const res = await fetch(API_URL + '?id=' + encodeURIComponent(id));
+    const data = await res.json();
+    document.getElementById('loadingSection').style.display = 'none';
+    
+    if (data.verified) {
+      showDetailVerified(data);
+    } else {
+      showNotFound(id);
+    }
+  } catch (e) {
+    document.getElementById('loadingSection').style.display = 'none';
+    showError(e.message);
+  }
+}
+
+function showVerified(data) {
+  const e = data.evidence;
+  const h = data.hash_log;
+  let html = '<div class="card">';
+  html += '<div class="shield shield-green">&#10003;</div>';
+  html += '<h2 style="text-align:center;margin-bottom:12px">Hash Verified</h2>';
+  html += '<div style="text-align:center;margin-bottom:16px"><span class="badge badge-green">INTEGRITY CONFIRMED</span></div>';
+  html += '<p style="text-align:center;color:#8899AA;font-size:13px">This evidence has been verified as authentic and unaltered since its original capture.</p>';
+  html += '</div>';
+  
+  html += '<div class="card">';
+  html += '<h3 style="margin-bottom:16px;color:#4D8EFF">Evidence Details</h3>';
+  html += field('Type', e.type === 'audio' ? 'Audio Recording' : 'Photo');
+  html += field('Title', e.title || 'Untitled');
+  html += field('Captured At', new Date(e.created_at).toLocaleString());
+  if (e.location_city) html += field('Location', e.location_city + ', ' + (e.location_country || ''));
+  if (e.consent_type) html += field('Consent Law', e.consent_type === 'one-party' ? 'One-party consent' : 'All-party consent required');
+  html += '<div class="field"><div class="field-label">SHA-256 Hash</div><div class="hash-box">' + (e.sha256_hash || '') + '</div></div>';
+  if (h && h.previous_hash) html += '<div class="field"><div class="field-label">Previous Chain Hash</div><div class="hash-box">' + h.previous_hash + '</div></div>';
+  html += '</div>';
+
+  html += '<div class="card cert-box"><p style="color:#10B981;font-size:13px;font-weight:600">This document certifies that the above evidence was collected through VeriHush and has maintained its cryptographic integrity since capture.</p>';
+  html += '<p style="color:#8899AA;font-size:11px;margin-top:8px">Verified on ' + new Date().toLocaleString() + '</p></div>';
+  html += backButton();
+
+  document.getElementById('resultSection').innerHTML = html;
+  document.getElementById('resultSection').classList.remove('hidden');
+}
+
+function showDetailVerified(data) {
+  const e = data.evidence;
+  const logs = data.hash_logs || [];
+  const chainOk = data.chain_valid;
+
+  let html = '<div class="card">';
+  html += '<div class="shield shield-green">&#10003;</div>';
+  html += '<h2 style="text-align:center;margin-bottom:12px">Evidence Verified</h2>';
+  html += '<div style="text-align:center;margin-bottom:8px"><span class="badge badge-green">INTEGRITY CONFIRMED</span></div>';
+  html += '<div style="text-align:center"><span style="color:' + (chainOk ? '#10B981' : '#FF5451') + ';font-weight:600;font-size:13px">' + (chainOk ? 'CHAIN INTACT' : 'CHAIN BROKEN') + '</span></div>';
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<h3 style="margin-bottom:16px;color:#4D8EFF">Evidence Details</h3>';
+  html += '<div class="field"><div class="field-label">Evidence ID</div><div class="hash-box">' + e.id + '</div></div>';
+  html += field('Type', e.type === 'audio' ? 'Audio Recording' : 'Photo');
+  html += field('Title', e.title || 'Untitled');
+  html += field('Captured At', new Date(e.created_at).toLocaleString());
+  if (e.duration) html += field('Duration', Math.floor(e.duration/60) + 'm ' + Math.round(e.duration%60) + 's');
+  if (e.file_size) html += field('File Size', (e.file_size/1024).toFixed(1) + ' KB');
+  html += '</div>';
+
+  html += '<div class="card">';
+  html += '<h3 style="margin-bottom:16px;color:#4D8EFF">Cryptographic Verification</h3>';
+  html += '<div class="field"><div class="field-label">SHA-256 Hash</div><div class="hash-box">' + (e.sha256_hash || 'N/A') + '</div></div>';
+  html += field('Hash Algorithm', 'SHA-256 (256-bit)');
+  html += '</div>';
+
+  if (e.location_city) {
+    html += '<div class="card">';
+    html += '<h3 style="margin-bottom:16px;color:#4D8EFF">Location &amp; Consent</h3>';
+    html += field('Location', e.location_city + ', ' + (e.location_region || '') + ' ' + (e.location_country || ''));
+    if (e.location_lat) html += field('GPS Coordinates', e.location_lat + ', ' + e.location_lng);
+    if (e.consent_type) html += field('Consent Law', e.consent_type === 'one-party' ? 'One-party consent' : 'All-party consent required');
+    html += '</div>';
+  }
+
+  if (logs.length > 0) {
+    html += '<div class="card">';
+    html += '<h3 style="margin-bottom:16px;color:#4D8EFF">Hash Chain Log (' + logs.length + ' entries)</h3>';
+    logs.forEach(function(log, i) {
+      html += '<div class="chain-entry">';
+      html += '<div class="chain-header"><span class="chain-num">#' + (logs.length - i) + '</span>';
+      html += '<span class="chain-time">' + new Date(log.created_at).toLocaleString() + '</span></div>';
+      html += '<div class="chain-hash">' + log.hash_value + '</div>';
+      if (log.previous_hash) html += '<div class="chain-prev">prev: ' + log.previous_hash.substring(0,24) + '...</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div class="card cert-box"><p style="color:#10B981;font-size:13px;font-weight:600">This document certifies that the above evidence was collected through VeriHush and has maintained its cryptographic integrity since capture.</p>';
+  html += '<p style="color:#8899AA;font-size:11px;margin-top:8px">Verified on ' + new Date().toLocaleString() + '</p></div>';
+  html += backButton();
+
+  document.getElementById('resultSection').innerHTML = html;
+  document.getElementById('resultSection').classList.remove('hidden');
+}
+
+function showNotFound(value) {
+  let html = '<div class="card">';
+  html += '<div class="shield shield-red">&#10007;</div>';
+  html += '<h2 style="text-align:center;margin-bottom:12px">Hash Not Found</h2>';
+  html += '<div style="text-align:center;margin-bottom:16px"><span class="badge badge-red">NOT IN DATABASE</span></div>';
+  html += '<p style="text-align:center;color:#8899AA;font-size:13px">The provided hash was not found in our database. This may mean the evidence has been altered or was not collected through VeriHush.</p>';
+  html += '</div>';
+  html += backButton();
+  document.getElementById('resultSection').innerHTML = html;
+  document.getElementById('resultSection').classList.remove('hidden');
+}
+
+function showError(msg) {
+  let html = '<div class="card">';
+  html += '<div class="shield shield-red">!</div>';
+  html += '<h2 style="text-align:center;margin-bottom:12px">Error</h2>';
+  html += '<p style="text-align:center;color:#FF5451">' + msg + '</p>';
+  html += '</div>';
+  html += backButton();
+  document.getElementById('resultSection').innerHTML = html;
+  document.getElementById('resultSection').classList.remove('hidden');
+}
+
+function field(label, value) {
+  return '<div class="field"><div class="field-label">' + label + '</div><div class="field-value">' + value + '</div></div>';
+}
+
+function backButton() {
+  return '<div class="card" style="text-align:center"><a href="?" style="color:#4D8EFF;text-decoration:none;font-weight:600;cursor:pointer" onclick="location.href=location.pathname;return false;">&#8592; Verify Another Hash</a></div>';
+}
+</script>
+</body>
+</html>
