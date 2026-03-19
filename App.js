@@ -23,25 +23,25 @@ const Stack = createNativeStackNavigator();
 
 const LOCK_GRACE_PERIOD = 300000; // 30 seconds
 
-function EvidenceStack() {
+function EvidenceStack({ duressMode }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="EvidenceList" component={EvidenceScreen} />
+      <Stack.Screen name="EvidenceList">{(props) => <EvidenceScreen {...props} duressMode={duressMode} />}</Stack.Screen>
       <Stack.Screen name="EvidenceDetail" component={EvidenceDetailScreen} />
     </Stack.Navigator>
   );
 }
 
-function SettingsStack() {
+function SettingsStack({ duressMode }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="SettingsMain" component={SettingsScreen} />
+      <Stack.Screen name="SettingsMain">{(props) => <SettingsScreen {...props} duressMode={duressMode} />}</Stack.Screen>
       <Stack.Screen name="PlanScreen" component={PlanScreen} />
     </Stack.Navigator>
   );
 }
 
-function MainTabs() {
+function MainTabs({ duressMode }) {
   const insets = useSafeAreaInsets();
   const bottomPadding = Math.max(insets.bottom, Platform.OS === 'android' ? 24 : 0);
 
@@ -72,11 +72,11 @@ function MainTabs() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Record" component={RecordScreen} />
-      <Tab.Screen name="Evidence" component={EvidenceStack} />
-      <Tab.Screen name="Report" component={ReportScreen} />
-      <Tab.Screen name="Settings" component={SettingsStack} />
+      <Tab.Screen name="Home">{(props) => <HomeScreen {...props} duressMode={duressMode} />}</Tab.Screen>
+      <Tab.Screen name="Record">{(props) => <RecordScreen {...props} duressMode={duressMode} />}</Tab.Screen>
+      <Tab.Screen name="Evidence">{(props) => <EvidenceStack {...props} duressMode={duressMode} />}</Tab.Screen>
+      <Tab.Screen name="Report">{(props) => <ReportScreen {...props} duressMode={duressMode} />}</Tab.Screen>
+      <Tab.Screen name="Settings">{(props) => <SettingsStack {...props} duressMode={duressMode} />}</Tab.Screen>
     </Tab.Navigator>
   );
 }
@@ -85,6 +85,7 @@ export default function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [locked, setLocked] = useState(false);
+  const [duressMode, setDuressMode] = useState(false);
   const [pinExists, setPinExists] = useState(false);
   const backgroundTimeRef = useRef(null);
 
@@ -153,7 +154,7 @@ export default function App() {
   if (locked && pinExists) {
     return (
       <SafeAreaProvider>
-        <LockScreen onUnlock={() => setLocked(false)} isSetup={false} />
+        <LockScreen onUnlock={(isDuress) => { setDuressMode(isDuress === true); setLocked(false); }} isSetup={false} />
       </SafeAreaProvider>
     );
   }
@@ -161,9 +162,14 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <MainTabs />
+        <MainTabs duressMode={duressMode} />
       </NavigationContainer>
     </SafeAreaProvider>
   );
 }
+
+
+
+
+
 

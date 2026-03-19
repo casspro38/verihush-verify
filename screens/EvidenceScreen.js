@@ -12,7 +12,7 @@ const COLORS = {
 
 const FILTERS = ['All', 'Audio', 'Photo', 'Notes'];
 
-export default function EvidenceScreen({ navigation }) {
+export default function EvidenceScreen({ navigation, route, duressMode }) {
   const [activeFilter, setActiveFilter] = useState('All');
   const [evidence, setEvidence] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -91,6 +91,24 @@ export default function EvidenceScreen({ navigation }) {
       navigation.navigate('Record');
     }
   };
+
+
+  // Duress mode: show empty decoy screen
+  if (duressMode) {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Evidence</Text>
+        </View>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Ionicons name="folder-open-outline" size={64} color={COLORS.textSecondary} />
+          <Text style={{ color: COLORS.textSecondary, fontSize: 16, marginTop: 12 }}>No evidence files</Text>
+          <Text style={{ color: COLORS.textSecondary, fontSize: 13, marginTop: 4 }}>Start recording to collect evidence</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -224,6 +242,7 @@ const styles = StyleSheet.create({
   modalCancelBtn: { marginTop: 16, paddingVertical: 14, borderRadius: 12, backgroundColor: COLORS.border, alignItems: 'center' },
   modalCancelText: { fontSize: 16, fontWeight: '600', color: COLORS.textSecondary },
 });
+
 
 
 

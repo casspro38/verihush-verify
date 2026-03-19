@@ -15,6 +15,8 @@ const COLORS = {
 const PIN_LENGTH = 6;
 const PIN_KEY = 'verihush_pin';
 const BIOMETRIC_KEY = 'verihush_biometric';
+const DURESS_PIN_KEY = 'verihush_duress_pin';
+const EMERGENCY_CONTACT_KEY = 'verihush_emergency_contact';
 
 export async function hasPinSet() {
   const pin = await SecureStore.getItemAsync(PIN_KEY);
@@ -35,9 +37,30 @@ export async function clearPIN() {
   await SecureStore.deleteItemAsync(BIOMETRIC_KEY);
 }
 
+export async function saveDuressPIN(pin) {
+  await SecureStore.setItemAsync(DURESS_PIN_KEY, pin);
+}
+
+export async function getDuressPIN() {
+  return await SecureStore.getItemAsync(DURESS_PIN_KEY);
+}
+
+export async function clearDuressPIN() {
+  await SecureStore.deleteItemAsync(DURESS_PIN_KEY);
+}
+
+export async function saveEmergencyContact(contact) {
+  await SecureStore.setItemAsync(EMERGENCY_CONTACT_KEY, contact);
+}
+
+export async function getEmergencyContact() {
+  return await SecureStore.getItemAsync(EMERGENCY_CONTACT_KEY);
+}
+
 export async function setBiometric(enabled) {
   await SecureStore.setItemAsync(BIOMETRIC_KEY, enabled ? 'true' : 'false');
 }
+
 
 export default function LockScreen({ onUnlock, isSetup }) {
   const [pin, setPin] = useState('');
@@ -128,10 +151,12 @@ export default function LockScreen({ onUnlock, isSetup }) {
         }
       } else if (step === 'verify') {
         const savedPin = await SecureStore.getItemAsync(PIN_KEY);
+        const savedPin = await SecureStore.getItemAsync(PIN_KEY);
+        const duressPin = await SecureStore.getItemAsync(DURESS_PIN_KEY);
         if (newPin === savedPin) {
-          onUnlock();
-        } else {
-          setError('Incorrect PIN');
+          onUnlock(false);
+        } else if (duressPin && newPin === duressPin) {
+          onUnlock(true);
           shake();
           setPin('');
         }
@@ -248,3 +273,8 @@ const styles = StyleSheet.create({
   keyEmpty: { width: 72, height: 72 },
   keyText: { color: COLORS.textPrimary, fontSize: 28, fontWeight: '600' },
 });
+
+
+
+
+

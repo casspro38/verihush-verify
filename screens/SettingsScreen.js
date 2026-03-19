@@ -6,7 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
-import LockScreen, { hasPinSet, clearPIN, isBiometricEnabled, setBiometric } from './LockScreen';
+import LockScreen, { hasPinSet, clearPIN, isBiometricEnabled, setBiometric, saveDuressPIN, getDuressPIN, clearDuressPIN, saveEmergencyContact, getEmergencyContact } from './LockScreen';
 
 const COLORS = {
   bg: '#071325', card: '#0F2140', blue: '#4D8EFF', green: '#10B981',
@@ -57,7 +57,7 @@ function SettingRow({ icon, label, value, onPress, isToggle, toggleValue, onTogg
   );
 }
 
-export default function SettingsScreen({ navigation }) {
+export default function SettingsScreen({ navigation, duressMode }) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -84,6 +84,9 @@ export default function SettingsScreen({ navigation }) {
   const [pinEnabled, setPinEnabled] = useState(false);
   const [bioEnabled, setBioEnabled] = useState(false);
   const [showPinSetup, setShowPinSetup] = useState(false);
+  const [duressEnabled, setDuressEnabled] = useState(false);
+  const [showDuressSetup, setShowDuressSetup] = useState(false);
+  const [emergencyContact, setEmergencyContact] = useState('');
 
   useFocusEffect(
     useCallback(() => {
@@ -97,6 +100,10 @@ export default function SettingsScreen({ navigation }) {
     setPinEnabled(pin);
     const bio = await isBiometricEnabled();
     setBioEnabled(bio);
+    const duress = await getDuressPIN();
+    setDuressEnabled(duress !== null);
+    const contact = await getEmergencyContact();
+    setEmergencyContact(contact || '');
   }
 
   async function loadData() {
@@ -210,6 +217,49 @@ export default function SettingsScreen({ navigation }) {
     if (val) {
       Alert.alert('Biometric Enabled', 'You can now unlock with fingerprint or face.');
     }
+  }
+
+  // Duress PIN toggle
+  function handleDuressToggle() {
+    if (!pinEnabled) {
+      Alert.alert('PIN Required', 'Please set a PIN first before setting a duress PIN.');
+      return;
+    }
+    if (duressEnabled) {
+      Alert.alert('Remove Duress PIN', 'Are you sure you want to remove the duress PIN?', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Remove', style: 'destructive', onPress: async () => {
+          await clearDuressPIN();
+          setDuressEnabled(false);
+          Alert.alert('Removed', 'Duress PIN has been removed.');
+        }}
+      ]);
+    } else {
+      Alert.prompt('Set Duress PIN', 'Enter a 6-digit duress PIN (must be different from your main PIN):', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Set', onPress: async (val) => {
+          if (!val || val.length !== 6 || !/^\d{6}$/.test(val)) {
+            Alert.alert('Invalid', 'Please enter exactly 6 digits.');
+            return;
+          }
+          await saveDuressPIN(val);
+          setDuressEnabled(true);
+          Alert.alert('Duress PIN Set', 'When entered at lock screen, a decoy empty screen will be shown.');
+        }}
+      ], 'plain-text', '', 'number-pad');
+    }
+  }
+
+  function handleEmergencyContact() {
+    Alert.prompt('Emergency Contact', 'Enter phone number or email to notify during duress:', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Save', onPress: async (val) => {
+        if (!val || val.trim().length === 0) return;
+        await saveEmergencyContact(val.trim());
+        setEmergencyContact(val.trim());
+        Alert.alert('Saved', 'Emergency contact updated.');
+      }}
+    ], 'plain-text', emergencyContact);
   }
 
   // PIN setup complete
@@ -381,6 +431,31 @@ export default function SettingsScreen({ navigation }) {
             />
           )}
         </View>
+
+        {/* Duress PIN - Hidden Safety */}
+        {pinEnabled && (
+          <>
+            <Text style={styles.sectionTitle}>Hidden Safety</Text>
+            <View style={styles.sectionCard}>
+              <SettingRow
+                icon="shield-half"
+                label="Duress PIN"
+                value={duressEnabled ? 'Active' : 'Off'}
+                onPress={handleDuressToggle}
+                iconColor={duressEnabled ? COLORS.red : COLORS.textSecondary}
+              />
+              {duressEnabled && (
+                <SettingRow
+                  icon="call"
+                  label="Emergency Contact"
+                  value={emergencyContact || 'Not set'}
+                  onPress={handleEmergencyContact}
+                  iconColor={emergencyContact ? COLORS.green : COLORS.yellow}
+                />
+              )}
+            </View>
+          </>
+        )}
 
         {/* Usage Overview */}
         <Text style={styles.sectionTitle}>Usage Overview</Text>
@@ -577,5 +652,11 @@ const styles = StyleSheet.create({
   upgradeDesc: { color: COLORS.textSecondary, fontSize: 11, marginTop: 2 },
   upgradePrice: { color: COLORS.blue, fontSize: 15, fontWeight: '800' },
 });
+
+
+
+
+
+
 
 

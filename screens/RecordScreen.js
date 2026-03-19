@@ -17,7 +17,7 @@ const COLORS = {
   textSecondary: '#8899AA', border: '#1A3055', purple: '#8B5CF6',
 };
 
-export default function RecordScreen({ navigation }) {
+export default function RecordScreen({ navigation, duressMode }) {
   const [isRecording, setIsRecording] = useState(false);
   const [duration, setDuration] = useState(0);
   const [stealthMode, setStealthMode] = useState(false);
@@ -301,6 +301,23 @@ export default function RecordScreen({ navigation }) {
   };
   const badge = getConsentBadge();
 
+
+  // Duress mode: show fake record screen that does nothing
+  if (duressMode) {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+        <Text style={styles.headerTitle}>Record</Text>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <View style={styles.recordBtn}>
+            <Ionicons name="mic" size={36} color="#FFF" />
+          </View>
+          <Text style={{ color: COLORS.textSecondary, marginTop: 16 }}>Tap to record</Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
@@ -520,6 +537,7 @@ const styles = StyleSheet.create({
   noteSaveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.green, borderRadius: 14, paddingVertical: 14, marginTop: 20 },
   noteSaveBtnText: { color: '#FFF', fontSize: 16, fontWeight: '700' },
 });
+
 
 
 

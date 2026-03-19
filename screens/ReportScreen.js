@@ -16,7 +16,7 @@ const COLORS = {
   border: '#1A3055',
 };
 
-export default function ReportScreen({ navigation }) {
+export default function ReportScreen({ navigation, duressMode }) {
   const [evidence, setEvidence] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [reports, setReports] = useState([]);
@@ -174,6 +174,22 @@ export default function ReportScreen({ navigation }) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color={COLORS.blue} />
+      </View>
+    );
+  }
+
+
+  // Duress mode: show empty reports
+  if (duressMode) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Reports</Text>
+        </View>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Ionicons name="documents-outline" size={64} color={COLORS.textSecondary} />
+          <Text style={{ color: COLORS.textSecondary, fontSize: 16, marginTop: 12 }}>No reports yet</Text>
+        </View>
       </View>
     );
   }
@@ -394,6 +410,7 @@ const styles = StyleSheet.create({
   reportMetaText: { color: COLORS.textSecondary, fontSize: 11, marginTop: 3 },
   statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
 });
+
 
 
 

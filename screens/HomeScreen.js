@@ -41,7 +41,7 @@ const formatTimeAgo = (dateStr) => {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 };
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, duressMode }) {
   const [locationInfo, setLocationInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -187,6 +187,30 @@ export default function HomeScreen({ navigation }) {
 
   const badge = getConsentBadge();
   const planInfo = PLAN_INFO[plan] || PLAN_INFO.free;
+
+
+  // Duress mode: show clean decoy stats
+  if (duressMode) {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
+        <ScrollView contentContainerStyle={styles.scroll}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.greeting}>Welcome back</Text>
+              <Text style={styles.subtitle}>Your quiet witness</Text>
+            </View>
+          </View>
+          <View style={styles.statsRow}>
+            <View style={styles.statCard}><Text style={styles.statNumber}>0</Text><Text style={styles.statLabel}>Audio</Text></View>
+            <View style={styles.statCard}><Text style={styles.statNumber}>0</Text><Text style={styles.statLabel}>Photos</Text></View>
+            <View style={styles.statCard}><Text style={styles.statNumber}>0</Text><Text style={styles.statLabel}>Reports</Text></View>
+            <View style={styles.statCard}><Text style={styles.statNumber}>0 MB</Text><Text style={styles.statLabel}>Storage</Text></View>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -437,4 +461,6 @@ const styles = StyleSheet.create({
   },
   quickLabel: { color: COLORS.textPrimary, fontSize: 12, fontWeight: '600' },
 });
+
+
 
