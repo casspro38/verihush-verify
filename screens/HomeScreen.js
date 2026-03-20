@@ -190,6 +190,7 @@ export default function HomeScreen({ navigation, duressMode }) {
 
 
   // Duress mode: show clean decoy stats
+  // Duress mode: show realistic decoy home
   if (duressMode) {
     return (
       <View style={styles.container}>
@@ -207,11 +208,20 @@ export default function HomeScreen({ navigation, duressMode }) {
             <View style={styles.statCard}><Text style={styles.statNumber}>0</Text><Text style={styles.statLabel}>Reports</Text></View>
             <View style={styles.statCard}><Text style={styles.statNumber}>0 MB</Text><Text style={styles.statLabel}>Storage</Text></View>
           </View>
+          <View style={{ backgroundColor: "#0F2140", borderRadius: 16, padding: 20, marginTop: 16 }}>
+            <Text style={{ color: "#4D8EFF", fontSize: 14, fontWeight: "700", marginBottom: 8 }}>Getting Started</Text>
+            <Text style={{ color: "#8899AA", fontSize: 13, lineHeight: 20 }}>Tap the Record tab to start collecting audio evidence. All recordings are automatically encrypted and backed up.</Text>
+          </View>
+          <View style={{ backgroundColor: "#0F2140", borderRadius: 16, padding: 20, marginTop: 12 }}>
+            <Text style={{ color: "#10B981", fontSize: 14, fontWeight: "700", marginBottom: 8 }}>Protection Status</Text>
+            <Text style={{ color: "#8899AA", fontSize: 13 }}>Evidence Integrity: Active</Text>
+            <Text style={{ color: "#8899AA", fontSize: 13 }}>Cloud Backup: Connected</Text>
+            <Text style={{ color: "#8899AA", fontSize: 13 }}>App Lock: Enabled</Text>
+          </View>
         </ScrollView>
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
@@ -461,6 +471,7 @@ const styles = StyleSheet.create({
   },
   quickLabel: { color: COLORS.textPrimary, fontSize: 12, fontWeight: '600' },
 });
+
 
 
 

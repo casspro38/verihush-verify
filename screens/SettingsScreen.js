@@ -1,7 +1,7 @@
 ﻿import React, { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
-  StatusBar, Switch, Alert, ActivityIndicator, RefreshControl, Modal,
+  StatusBar, Switch, Alert, ActivityIndicator, RefreshControl, Modal, TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -86,6 +86,9 @@ export default function SettingsScreen({ navigation, duressMode }) {
   const [showPinSetup, setShowPinSetup] = useState(false);
   const [duressEnabled, setDuressEnabled] = useState(false);
   const [showDuressSetup, setShowDuressSetup] = useState(false);
+  const [duressInput, setDuressInput] = useState('');
+  const [showEmergencySetup, setShowEmergencySetup] = useState(false);
+  const [emergencyInput, setEmergencyInput] = useState('');
   const [emergencyContact, setEmergencyContact] = useState('');
 
   useFocusEffect(
@@ -235,31 +238,35 @@ export default function SettingsScreen({ navigation, duressMode }) {
         }}
       ]);
     } else {
-      Alert.prompt('Set Duress PIN', 'Enter a 6-digit duress PIN (must be different from your main PIN):', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Set', onPress: async (val) => {
-          if (!val || val.length !== 6 || !/^\d{6}$/.test(val)) {
-            Alert.alert('Invalid', 'Please enter exactly 6 digits.');
-            return;
-          }
-          await saveDuressPIN(val);
-          setDuressEnabled(true);
-          Alert.alert('Duress PIN Set', 'When entered at lock screen, a decoy empty screen will be shown.');
-        }}
-      ], 'plain-text', '', 'number-pad');
+      setDuressInput('');
+      setShowDuressSetup(true);
     }
   }
 
+  async function confirmDuressPin() {
+    if (!duressInput || duressInput.length !== 6 || !/^\d{6}$/.test(duressInput)) {
+      Alert.alert('Invalid', 'Please enter exactly 6 digits.');
+      return;
+    }
+    await saveDuressPIN(duressInput);
+    setDuressEnabled(true);
+    setShowDuressSetup(false);
+    setDuressInput('');
+    Alert.alert('Duress PIN Set', 'When entered at lock screen, a decoy empty screen will be shown.');
+  }
+
   function handleEmergencyContact() {
-    Alert.prompt('Emergency Contact', 'Enter phone number or email to notify during duress:', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Save', onPress: async (val) => {
-        if (!val || val.trim().length === 0) return;
-        await saveEmergencyContact(val.trim());
-        setEmergencyContact(val.trim());
-        Alert.alert('Saved', 'Emergency contact updated.');
-      }}
-    ], 'plain-text', emergencyContact);
+    setEmergencyInput(emergencyContact);
+    setShowEmergencySetup(true);
+  }
+
+  async function confirmEmergencyContact() {
+    if (!emergencyInput || emergencyInput.trim().length === 0) return;
+    await saveEmergencyContact(emergencyInput.trim());
+    setEmergencyContact(emergencyInput.trim());
+    setShowEmergencySetup(false);
+    setEmergencyInput('');
+    Alert.alert('Saved', 'Emergency contact updated.');
   }
 
   // PIN setup complete
@@ -358,6 +365,60 @@ export default function SettingsScreen({ navigation, duressMode }) {
       <View style={styles.header}>
         <Text style={styles.title}>Settings</Text>
       </View>
+
+      {/* Duress PIN Setup Modal */}
+      <Modal visible={showDuressSetup} animationType="slide" transparent statusBarTranslucent>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', padding: 30 }}>
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 16, padding: 24 }}>
+            <Text style={{ color: COLORS.textPrimary, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>Set Duress PIN</Text>
+            <Text style={{ color: COLORS.textSecondary, fontSize: 13, marginBottom: 16 }}>Enter a 6-digit PIN different from your main PIN. This PIN will show a decoy empty screen.</Text>
+            <TextInput
+              style={{ backgroundColor: COLORS.bg, color: COLORS.textPrimary, borderRadius: 10, padding: 14, fontSize: 20, textAlign: 'center', letterSpacing: 8, borderWidth: 1, borderColor: COLORS.border }}
+              value={duressInput}
+              onChangeText={setDuressInput}
+              keyboardType="number-pad"
+              maxLength={6}
+              secureTextEntry
+              placeholder="000000"
+              placeholderTextColor={COLORS.textSecondary}
+            />
+            <View style={{ flexDirection: 'row', marginTop: 16, gap: 10 }}>
+              <TouchableOpacity onPress={() => setShowDuressSetup(false)} style={{ flex: 1, padding: 14, borderRadius: 10, backgroundColor: COLORS.bg, alignItems: 'center' }}>
+                <Text style={{ color: COLORS.textSecondary, fontWeight: '600' }}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirmDuressPin} style={{ flex: 1, padding: 14, borderRadius: 10, backgroundColor: COLORS.red, alignItems: 'center' }}>
+                <Text style={{ color: '#FFF', fontWeight: '700' }}>Set PIN</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Emergency Contact Modal */}
+      <Modal visible={showEmergencySetup} animationType="slide" transparent statusBarTranslucent>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'center', padding: 30 }}>
+          <View style={{ backgroundColor: COLORS.card, borderRadius: 16, padding: 24 }}>
+            <Text style={{ color: COLORS.textPrimary, fontSize: 18, fontWeight: '700', marginBottom: 8 }}>Emergency Contact</Text>
+            <Text style={{ color: COLORS.textSecondary, fontSize: 13, marginBottom: 16 }}>Enter a phone number or email. This contact will be silently notified when duress PIN is used.</Text>
+            <TextInput
+              style={{ backgroundColor: COLORS.bg, color: COLORS.textPrimary, borderRadius: 10, padding: 14, fontSize: 16, borderWidth: 1, borderColor: COLORS.border }}
+              value={emergencyInput}
+              onChangeText={setEmergencyInput}
+              placeholder="Phone or email"
+              placeholderTextColor={COLORS.textSecondary}
+              autoCapitalize="none"
+            />
+            <View style={{ flexDirection: 'row', marginTop: 16, gap: 10 }}>
+              <TouchableOpacity onPress={() => setShowEmergencySetup(false)} style={{ flex: 1, padding: 14, borderRadius: 10, backgroundColor: COLORS.bg, alignItems: 'center' }}>
+                <Text style={{ color: COLORS.textSecondary, fontWeight: '600' }}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirmEmergencyContact} style={{ flex: 1, padding: 14, borderRadius: 10, backgroundColor: COLORS.green, alignItems: 'center' }}>
+                <Text style={{ color: '#FFF', fontWeight: '700' }}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* PIN Setup Modal */}
       <Modal visible={showPinSetup} animationType="slide" statusBarTranslucent>
@@ -652,6 +713,10 @@ const styles = StyleSheet.create({
   upgradeDesc: { color: COLORS.textSecondary, fontSize: 11, marginTop: 2 },
   upgradePrice: { color: COLORS.blue, fontSize: 15, fontWeight: '800' },
 });
+
+
+
+
 
 
 

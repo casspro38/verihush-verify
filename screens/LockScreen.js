@@ -5,6 +5,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
+import { supabase } from '../utils/supabase';
 
 const COLORS = {
   bg: '#071325', card: '#0F2140', blue: '#4D8EFF', green: '#10B981',
@@ -55,6 +56,24 @@ export async function saveEmergencyContact(contact) {
 
 export async function getEmergencyContact() {
   return await SecureStore.getItemAsync(EMERGENCY_CONTACT_KEY);
+}
+
+
+async function sendDuressAlert() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const contact = await SecureStore.getItemAsync(EMERGENCY_CONTACT_KEY);
+    await supabase.from('duress_alerts').insert({
+      user_id: session.user.id,
+      emergency_contact: contact || null,
+      triggered_at: new Date().toISOString(),
+      status: 'triggered',
+    });
+    console.log('Duress alert sent');
+  } catch (e) {
+    console.log('Duress alert error:', e.message);
+  }
 }
 
 export async function setBiometric(enabled) {
@@ -151,19 +170,20 @@ export default function LockScreen({ onUnlock, isSetup }) {
         }
       } else if (step === 'verify') {
         const savedPin = await SecureStore.getItemAsync(PIN_KEY);
-        const savedPin = await SecureStore.getItemAsync(PIN_KEY);
         const duressPin = await SecureStore.getItemAsync(DURESS_PIN_KEY);
         if (newPin === savedPin) {
           onUnlock(false);
         } else if (duressPin && newPin === duressPin) {
+          sendDuressAlert();
           onUnlock(true);
+        } else {
+          setError('Incorrect PIN');
           shake();
           setPin('');
         }
       }
     }
   }
-
   function handleDelete() {
     setPin(prev => prev.slice(0, -1));
     setError('');
@@ -273,6 +293,10 @@ const styles = StyleSheet.create({
   keyEmpty: { width: 72, height: 72 },
   keyText: { color: COLORS.textPrimary, fontSize: 28, fontWeight: '600' },
 });
+
+
+
+
 
 
 
