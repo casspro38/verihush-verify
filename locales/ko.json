@@ -36,9 +36,12 @@
     "hero_title": "당신의 목소리는 사라지지 않습니다",
     "hero_tagline": "녹음하고. 잠그고. 증명하세요.",
     "always_saved": "항상\n저장됨",
-    "always_saved_desc": "폰이 고장나도 증거는 즉시 백업됩니다",
+    "always_saved_desc": "폰을 잃어도 즉시 백업됩니다",
     "cant_be_changed": "변조\n불가능",
-    "cant_be_changed_desc": "누구도 녹음을 편집하거나 위조할 수 없습니다",
+    "cant_be_changed_desc": "누구도 녹음을 변조할 수 없습니다",
+    "ready_for_court": "확실한\n증거",
+    "ready_for_court_desc": "필요한 순간 확실한 증거를 제공합니다",
+    "hero_desc": "분쟁, 괴롭힘 또는 긴급 상황에서\n자신을 보호하세요.\n녹음은 안전하게 백업되며\n절대 변조할 수 없습니다.",
     "recording_legal": "여기서 녹음이 합법입니다",
     "permission_needed": "녹음 권한이 필요합니다"
   },
@@ -95,3 +98,8 @@
     "no": "아니오"
   }
 }
+
+
+
+
+

@@ -36,9 +36,12 @@
     "hero_title": "Your voice never disappears",
     "hero_tagline": "Record it. Lock it. Prove it.",
     "always_saved": "Always\nSaved",
-    "always_saved_desc": "Your evidence is backed up instantly — even if your phone breaks",
+    "always_saved_desc": "Backed up instantly — even if your phone is lost",
     "cant_be_changed": "Can't Be\nChanged",
-    "cant_be_changed_desc": "No one can edit or fake your recordings — not even you",
+    "cant_be_changed_desc": "No one can alter your recordings — ever",
+    "ready_for_court": "Prove\nIt",
+    "ready_for_court_desc": "Solid proof when you need it most",
+    "hero_desc": "Protect yourself in disputes,\nharassment, or emergencies.\nYour recordings are safely backed up\nand can never be altered.",
     "recording_legal": "Recording is legal here",
     "permission_needed": "Permission needed to record"
   },
@@ -95,3 +98,8 @@
     "no": "No"
   }
 }
+
+
+
+
+

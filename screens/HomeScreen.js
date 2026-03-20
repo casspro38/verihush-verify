@@ -249,10 +249,10 @@ export default function HomeScreen({ navigation, duressMode }) {
           </View>
           <Text style={styles.heroTitle}>{t('home.hero_title')}</Text>
           <Text style={styles.heroTagline}>{t('home.hero_tagline')}</Text>
-          <Text style={styles.heroSubtitle}>
-            Protect yourself in disputes, harassment, or emergencies.{'\n'}
-            Your recordings are safely backed up and can never be altered.
-          </Text>
+          <Text style={styles.heroSubtitle}>{t('home.hero_desc')}</Text>
+
+
+
         </View>
 
         {/* Three Pillars - Simple Language */}
@@ -275,8 +275,8 @@ export default function HomeScreen({ navigation, duressMode }) {
             <View style={[styles.pillarIcon, { backgroundColor: COLORS.purple + '20' }]}>
               <Ionicons name="briefcase" size={22} color={COLORS.purple} />
             </View>
-            <Text style={styles.pillarTitle}>Ready for{'\n'}Court</Text>
-            <Text style={styles.pillarDesc}>Create reports that lawyers and judges can trust and verify</Text>
+            <Text style={styles.pillarTitle}>{t('home.ready_for_court')}</Text>
+            <Text style={styles.pillarDesc}>{t('home.ready_for_court_desc')}</Text>
           </View>
         </View>
 
@@ -472,6 +472,8 @@ const styles = StyleSheet.create({
   },
   quickLabel: { color: COLORS.textPrimary, fontSize: 12, fontWeight: '600' },
 });
+
+
 
 
 
