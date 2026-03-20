@@ -106,6 +106,10 @@ export default function LockScreen({ onUnlock, isSetup }) {
       const enrolled = await LocalAuthentication.isEnrolledAsync();
       if (!enrolled) return;
 
+      const authTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
+      const hasFingerprint = authTypes.includes(LocalAuthentication.AuthenticationType.FINGERPRINT);
+      if (!hasFingerprint) return;
+
       const result = await LocalAuthentication.authenticateAsync({
         promptMessage: 'Unlock VeriHush',
         cancelLabel: 'Use PIN',
@@ -153,7 +157,7 @@ export default function LockScreen({ onUnlock, isSetup }) {
           if (compatible && enrolled) {
             Alert.alert(
               'Biometric Unlock',
-              'Would you like to enable fingerprint/face unlock?',
+              'Would you like to enable fingerprint unlock?',
               [
                 { text: 'No', onPress: () => { onUnlock(); } },
                 { text: 'Yes', onPress: async () => { await setBiometric(true); onUnlock(); } },
@@ -294,6 +298,8 @@ const styles = StyleSheet.create({
   keyEmpty: { width: 72, height: 72 },
   keyText: { color: COLORS.textPrimary, fontSize: 28, fontWeight: '600' },
 });
+
+
 
 
 
