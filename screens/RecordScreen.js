@@ -9,7 +9,8 @@ import { generateFileHash, uploadAudioEvidence, uploadPhotoEvidence } from '../u
 import { StreamingUploader } from '../utils/streamingUpload';
 import { checkUploadQuota, checkStreamingAllowed } from '../utils/planLimits';
 import { supabase } from '../utils/supabase';
-import { Accelerometer } from 'expo-sensors';
+let Accelerometer = null;
+try { Accelerometer = require('expo-sensors').Accelerometer; } catch(e) {}
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSpeechRecognition } from '../utils/speechRecognition';
@@ -65,6 +66,7 @@ export default function RecordScreen({ navigation, duressMode }) {
 
       if (!shakeEnabledRef.current) return;
 
+      try {
       await Accelerometer.setUpdateInterval(100);
       subscription = Accelerometer.addListener(({ x, y, z }) => {
         const magnitude = Math.sqrt(x * x + y * y + z * z);
@@ -82,6 +84,9 @@ export default function RecordScreen({ navigation, duressMode }) {
           }
         }
       });
+      } catch (e) {
+        console.log('Shake not available:', e.message);
+      }
     };
 
     initShake();
@@ -587,6 +592,8 @@ const styles = StyleSheet.create({
   noteSaveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.green, borderRadius: 14, paddingVertical: 14, marginTop: 20 },
   noteSaveBtnText: { color: '#FFF', fontSize: 16, fontWeight: '700' },
 });
+
+
 
 
 

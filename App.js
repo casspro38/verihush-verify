@@ -94,7 +94,7 @@ export default function App() {
   const backgroundTimeRef = useRef(null);
 
   useEffect(() => {
-    initLanguage().then(() => {
+    initLanguage();
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session) {
@@ -183,6 +183,8 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+
 
 
 

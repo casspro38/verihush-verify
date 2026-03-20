@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
 import { supabase } from '../utils/supabase';
+import { t } from '../i18n';
 
 const COLORS = {
   bg: '#071325', card: '#0F2140', blue: '#4D8EFF', green: '#10B981',
@@ -293,6 +294,7 @@ const styles = StyleSheet.create({
   keyEmpty: { width: 72, height: 72 },
   keyText: { color: COLORS.textPrimary, fontSize: 28, fontWeight: '600' },
 });
+
 
 
 
