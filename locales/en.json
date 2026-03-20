@@ -1,0 +1,46 @@
+﻿{
+  "app_name": "VeriHush",
+  "onboarding": {
+    "slide1_title": "Your Quiet Witness",
+    "slide1_subtitle": "VeriHush silently records and protects\nevidence when you need it most.",
+    "slide2_title": "Smart Recording",
+    "slide2_subtitle": "Real-time speech-to-text with\nthreat keyword detection.",
+    "slide3_title": "Tamper-Proof Evidence",
+    "slide3_subtitle": "SHA-256 hash chain ensures\nyour evidence is court-ready.",
+    "slide4_title": "Duress Protection",
+    "slide4_subtitle": "Hidden PIN shows a decoy screen\nwhile alerting your emergency contact.",
+    "get_started": "Get Started",
+    "skip": "Skip",
+    "next": "Next"
+  },
+  "lock": {
+    "create_pin": "Create a 6-digit PIN",
+    "confirm_pin": "Confirm your PIN",
+    "enter_pin": "Enter your PIN",
+    "incorrect_pin": "Incorrect PIN",
+    "pins_not_match": "PINs do not match. Try again."
+  },
+  "home": {
+    "start_recording": "Start Recording",
+    "stop_recording": "Stop Recording",
+    "recording_in_progress": "Recording in progress...",
+    "evidence_saved": "Evidence saved successfully"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "duress_pin": "Duress PIN",
+    "biometric": "Biometric Unlock",
+    "shake_to_record": "Shake to Record",
+    "sign_out": "Sign Out"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "save": "Save",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
+

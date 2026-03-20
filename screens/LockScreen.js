@@ -162,7 +162,7 @@ export default function LockScreen({ onUnlock, isSetup }) {
             onUnlock();
           }
         } else {
-          setError('PINs do not match. Try again.');
+          setError(t('lock.pins_not_match'));
           shake();
           setPin('');
           setStep('create');
@@ -177,7 +177,7 @@ export default function LockScreen({ onUnlock, isSetup }) {
           sendDuressAlert();
           onUnlock(true);
         } else {
-          setError('Incorrect PIN');
+          setError(t('lock.incorrect_pin'));
           shake();
           setPin('');
         }
@@ -193,11 +193,11 @@ export default function LockScreen({ onUnlock, isSetup }) {
     tryBiometric();
   }
 
-  const title = step === 'create' ? 'Create PIN' : step === 'confirm' ? 'Confirm PIN' : 'Enter PIN';
+  const title = step === 'create' ? t('lock.create_pin') : step === 'confirm' ? t('lock.confirm_pin') : t('lock.enter_pin');
   const subtitle = step === 'create'
-    ? 'Set a 6-digit PIN to secure your evidence'
+    ? t('lock.create_pin')
     : step === 'confirm'
-    ? 'Enter the same PIN again'
+    ? t('lock.confirm_pin')
     : 'Unlock to access your evidence';
 
   return (
@@ -293,6 +293,8 @@ const styles = StyleSheet.create({
   keyEmpty: { width: 72, height: 72 },
   keyText: { color: COLORS.textPrimary, fontSize: 28, fontWeight: '600' },
 });
+
+
 
 
 

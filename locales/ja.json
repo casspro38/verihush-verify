@@ -1,0 +1,45 @@
+﻿{
+  "app_name": "VeriHush",
+  "onboarding": {
+    "slide1_title": "あなたの静かな証人",
+    "slide1_subtitle": "VeriHushは必要な時に\n静かに証拠を記録し保護します。",
+    "slide2_title": "リアルタイム音声認識",
+    "slide2_subtitle": "AI音声テキスト変換で\n録音内容を即座に確認できます。",
+    "slide3_title": "改ざん不可能な証拠",
+    "slide3_subtitle": "SHA-256ハッシュにより\n証拠の改ざんを防止します。",
+    "slide4_title": "法廷対応レポート",
+    "slide4_subtitle": "完全な証拠管理記録付きの\n専門PDFレポートを生成します。",
+    "get_started": "始める",
+    "skip": "スキップ",
+    "next": "次へ"
+  },
+  "lock": {
+    "create_pin": "6桁のPINを作成",
+    "confirm_pin": "PINを確認",
+    "enter_pin": "PINを入力",
+    "incorrect_pin": "PINが正しくありません",
+    "pins_not_match": "PINが一致しません。もう一度お試しください。"
+  },
+  "home": {
+    "start_recording": "録音開始",
+    "stop_recording": "録音停止",
+    "recording_in_progress": "録音中...",
+    "evidence_saved": "証拠が保存されました"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "duress_pin": "緊急PIN",
+    "biometric": "生体認証",
+    "shake_to_record": "振って録音",
+    "sign_out": "サインアウト"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "delete": "削除",
+    "save": "保存",
+    "yes": "はい",
+    "no": "いいえ"
+  }
+}

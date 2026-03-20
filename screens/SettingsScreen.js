@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { t, setLanguage, getCurrentLanguage, LANGUAGES } from '../i18n';
 import LockScreen, { hasPinSet, clearPIN, isBiometricEnabled, setBiometric, saveDuressPIN, getDuressPIN, clearDuressPIN, saveEmergencyContact, getEmergencyContact } from './LockScreen';
 
 const COLORS = {
@@ -85,6 +86,9 @@ export default function SettingsScreen({ navigation, duressMode }) {
   const [pinEnabled, setPinEnabled] = useState(false);
   const [bioEnabled, setBioEnabled] = useState(false);
   const [showPinSetup, setShowPinSetup] = useState(false);
+  const [currentLang, setCurrentLang] = useState(getCurrentLanguage());
+  const [showLangPicker, setShowLangPicker] = useState(false);
+  const [shakeEnabled, setShakeEnabled] = useState(false);
   const [duressEnabled, setDuressEnabled] = useState(false);
   const [showDuressSetup, setShowDuressSetup] = useState(false);
   const [duressInput, setDuressInput] = useState('');
@@ -104,6 +108,8 @@ export default function SettingsScreen({ navigation, duressMode }) {
     setPinEnabled(pin);
     const bio = await isBiometricEnabled();
     setBioEnabled(bio);
+    const shake = await AsyncStorage.getItem('verihush_shake_to_record');
+    setShakeEnabled(shake === 'true');
     const duress = await getDuressPIN();
     setDuressEnabled(duress !== null);
     const contact = await getEmergencyContact();
@@ -450,6 +456,45 @@ export default function SettingsScreen({ navigation, duressMode }) {
           </View>
         </View>
 
+        {/* Shake to Record */}
+        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <View style={styles.sectionCard}>
+          <SettingRow
+            icon='phone-portrait'
+            label='Shake to Record'
+            isToggle
+            toggleValue={shakeEnabled}
+            onToggle={async (val) => {
+              await AsyncStorage.setItem('verihush_shake_to_record', val ? 'true' : 'false');
+              setShakeEnabled(val);
+            }}
+            iconColor={shakeEnabled ? COLORS.green : COLORS.textSecondary}
+          />
+          <Text style={{ color: COLORS.textSecondary, fontSize: 12, paddingHorizontal: 16, paddingBottom: 12 }}>
+            Shake your phone 3 times to start recording instantly
+          </Text>
+        </View>
+
+        {/* Language */}
+        <Text style={styles.sectionTitle}>Language</Text>
+        <View style={styles.sectionCard}>
+          {LANGUAGES.map((lang) => (
+            <TouchableOpacity
+              key={lang.code}
+              onPress={async () => {
+                await setLanguage(lang.code);
+                setCurrentLang(lang.code);
+              }}
+              style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 14, paddingHorizontal: 16, borderBottomWidth: 0.5, borderBottomColor: COLORS.border }}
+            >
+              <Text style={{ color: COLORS.textPrimary, fontSize: 15 }}>{lang.label}</Text>
+              {currentLang === lang.code && (
+                <Ionicons name='checkmark-circle' size={22} color={COLORS.green} />
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+
         {/* Security */}
         <Text style={styles.sectionTitle}>Security</Text>
         <View style={styles.sectionCard}>
@@ -714,6 +759,12 @@ const styles = StyleSheet.create({
   upgradeDesc: { color: COLORS.textSecondary, fontSize: 11, marginTop: 2 },
   upgradePrice: { color: COLORS.blue, fontSize: 15, fontWeight: '800' },
 });
+
+
+
+
+
+
 
 
 

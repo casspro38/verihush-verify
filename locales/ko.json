@@ -1,0 +1,45 @@
+﻿{
+  "app_name": "VeriHush",
+  "onboarding": {
+    "slide1_title": "당신의 조용한 증인",
+    "slide1_subtitle": "VeriHush는 필요한 순간\n조용히 증거를 기록하고 보호합니다.",
+    "slide2_title": "실시간 음성 인식",
+    "slide2_subtitle": "AI 기반 음성→텍스트 변환으로\n녹음 내용을 즉시 확인하세요.",
+    "slide3_title": "위변조 불가능한 증거",
+    "slide3_subtitle": "SHA-256 해시로 증거가\n변조되지 않았음을 증명합니다.",
+    "slide4_title": "법정용 보고서",
+    "slide4_subtitle": "완전한 증거 보관 이력이 포함된\n전문 PDF 보고서를 생성합니다.",
+    "get_started": "시작하기",
+    "skip": "건너뛰기",
+    "next": "다음"
+  },
+  "lock": {
+    "create_pin": "6자리 PIN을 만드세요",
+    "confirm_pin": "PIN을 확인하세요",
+    "enter_pin": "PIN을 입력하세요",
+    "incorrect_pin": "PIN이 올바르지 않습니다",
+    "pins_not_match": "PIN이 일치하지 않습니다. 다시 시도하세요."
+  },
+  "home": {
+    "start_recording": "녹음 시작",
+    "stop_recording": "녹음 중지",
+    "recording_in_progress": "녹음 중...",
+    "evidence_saved": "증거가 저장되었습니다"
+  },
+  "settings": {
+    "title": "설정",
+    "language": "언어",
+    "duress_pin": "긴급 PIN",
+    "biometric": "생체 인증",
+    "shake_to_record": "흔들어서 녹음",
+    "sign_out": "로그아웃"
+  },
+  "common": {
+    "cancel": "취소",
+    "confirm": "확인",
+    "delete": "삭제",
+    "save": "저장",
+    "yes": "예",
+    "no": "아니오"
+  }
+}

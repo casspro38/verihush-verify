@@ -1,0 +1,45 @@
+﻿{
+  "app_name": "VeriHush",
+  "onboarding": {
+    "slide1_title": "Tu testigo silencioso",
+    "slide1_subtitle": "VeriHush graba y protege evidencia\nen silencio cuando mas lo necesitas.",
+    "slide2_title": "Reconocimiento de voz en tiempo real",
+    "slide2_subtitle": "Conversion de voz a texto con IA\npara verificar grabaciones al instante.",
+    "slide3_title": "Evidencia a prueba de manipulacion",
+    "slide3_subtitle": "El hash SHA-256 garantiza que\ntu evidencia no puede ser alterada.",
+    "slide4_title": "Informes listos para el tribunal",
+    "slide4_subtitle": "Genera informes PDF profesionales\ncon prueba completa de custodia.",
+    "get_started": "Comenzar",
+    "skip": "Omitir",
+    "next": "Siguiente"
+  },
+  "lock": {
+    "create_pin": "Crea un PIN de 6 digitos",
+    "confirm_pin": "Confirma tu PIN",
+    "enter_pin": "Ingresa tu PIN",
+    "incorrect_pin": "PIN incorrecto",
+    "pins_not_match": "Los PIN no coinciden. Intentalo de nuevo."
+  },
+  "home": {
+    "start_recording": "Iniciar grabacion",
+    "stop_recording": "Detener grabacion",
+    "recording_in_progress": "Grabando...",
+    "evidence_saved": "Evidencia guardada exitosamente"
+  },
+  "settings": {
+    "title": "Configuracion",
+    "language": "Idioma",
+    "duress_pin": "PIN de emergencia",
+    "biometric": "Desbloqueo biometrico",
+    "shake_to_record": "Agitar para grabar",
+    "sign_out": "Cerrar sesion"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "yes": "Si",
+    "no": "No"
+  }
+}

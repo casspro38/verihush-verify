@@ -10,6 +10,7 @@ import { supabase } from './utils/supabase';
 import AuthScreen from './screens/AuthScreen';
 import LockScreen, { hasPinSet } from './screens/LockScreen';
 import OnboardingScreen from './screens/OnboardingScreen';
+import { initLanguage } from './i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeScreen from './screens/HomeScreen';
 import RecordScreen from './screens/RecordScreen';
@@ -93,6 +94,7 @@ export default function App() {
   const backgroundTimeRef = useRef(null);
 
   useEffect(() => {
+    initLanguage().then(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session) {
@@ -181,6 +183,8 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+
 
 
 

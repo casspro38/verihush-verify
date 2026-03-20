@@ -4,6 +4,7 @@ import {
   Dimensions, StatusBar, Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { t } from '../i18n';
 import { Image } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -17,29 +18,29 @@ const slides = [
   {
     id: '1',
     image: require('../assets/Logo.jpg'),
-    title: 'Your Quiet Witness',
-    subtitle: 'VeriHush silently records and protects\nevidence when you need it most.',
+    title: t('onboarding.slide1_title'),
+    subtitle: t('onboarding.slide1_subtitle'),
     color: COLORS.blue,
   },
   {
     id: '2',
     icon: 'mic',
-    title: 'Smart Recording',
-    subtitle: 'Real-time speech-to-text with\nthreat keyword detection.',
+    title: t('onboarding.slide2_title'),
+    subtitle: t('onboarding.slide2_subtitle'),
     color: '#F59E0B',
   },
   {
     id: '3',
     icon: 'finger-print',
-    title: 'Tamper-Proof Evidence',
-    subtitle: 'SHA-256 hash chain ensures\nyour evidence is court-ready.',
+    title: t('onboarding.slide3_title'),
+    subtitle: t('onboarding.slide3_subtitle'),
     color: COLORS.green,
   },
   {
     id: '4',
     icon: 'alert-circle',
-    title: 'Duress Protection',
-    subtitle: 'Hidden PIN shows a decoy screen\nwhile alerting your emergency contact.',
+    title: t('onboarding.slide4_title'),
+    subtitle: t('onboarding.slide4_subtitle'),
     color: '#FF5451',
   },
 ];
@@ -88,7 +89,7 @@ export default function OnboardingScreen({ onDone }) {
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
       
       <TouchableOpacity style={slideStyles.skipBtn} onPress={handleSkip}>
-        <Text style={slideStyles.skipText}>Skip</Text>
+        <Text style={slideStyles.skipText}>{ t('onboarding.skip') }</Text>
       </TouchableOpacity>
 
       <FlatList
@@ -119,7 +120,7 @@ export default function OnboardingScreen({ onDone }) {
 
         <TouchableOpacity style={slideStyles.nextBtn} onPress={handleNext}>
           <Text style={slideStyles.nextText}>
-            {currentIndex === slides.length - 1 ? 'Get Started' : 'Next'}
+            {currentIndex === slides.length - 1 ? t('onboarding.get_started') : t('onboarding.next')}
           </Text>
           <Ionicons name="arrow-forward" size={20} color="#FFF" />
         </TouchableOpacity>
@@ -148,6 +149,10 @@ const slideStyles = StyleSheet.create({
   },
   nextText: { color: '#FFF', fontSize: 17, fontWeight: '600' },
 });
+
+
+
+
 
 
 

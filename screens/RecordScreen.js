@@ -9,6 +9,9 @@ import { generateFileHash, uploadAudioEvidence, uploadPhotoEvidence } from '../u
 import { StreamingUploader } from '../utils/streamingUpload';
 import { checkUploadQuota, checkStreamingAllowed } from '../utils/planLimits';
 import { supabase } from '../utils/supabase';
+import { Accelerometer } from 'expo-sensors';
+import * as Haptics from 'expo-haptics';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSpeechRecognition } from '../utils/speechRecognition';
 
 const COLORS = {
@@ -40,6 +43,53 @@ export default function RecordScreen({ navigation, duressMode }) {
   const chunkTimerRef = useRef(null);
 
   const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+
+  // Shake-to-Record
+  const SHAKE_THRESHOLD = 1.8;
+  const SHAKE_COUNT_NEEDED = 3;
+  const SHAKE_WINDOW = 1500;
+  const shakeTimestamps = useRef([]);
+  const shakeEnabledRef = useRef(false);
+  const isRecordingRef = useRef(false);
+
+  useEffect(() => {
+    isRecordingRef.current = isRecording;
+  }, [isRecording]);
+
+  useEffect(() => {
+    let subscription = null;
+
+    const initShake = async () => {
+      const enabled = await AsyncStorage.getItem('verihush_shake_to_record');
+      shakeEnabledRef.current = enabled === 'true';
+
+      if (!shakeEnabledRef.current) return;
+
+      await Accelerometer.setUpdateInterval(100);
+      subscription = Accelerometer.addListener(({ x, y, z }) => {
+        const magnitude = Math.sqrt(x * x + y * y + z * z);
+        if (magnitude > SHAKE_THRESHOLD) {
+          const now = Date.now();
+          shakeTimestamps.current.push(now);
+          shakeTimestamps.current = shakeTimestamps.current.filter(t => now - t < SHAKE_WINDOW);
+
+          if (shakeTimestamps.current.length >= SHAKE_COUNT_NEEDED) {
+            shakeTimestamps.current = [];
+            if (!isRecordingRef.current) {
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              startRecording();
+            }
+          }
+        }
+      });
+    };
+
+    initShake();
+
+    return () => {
+      if (subscription) subscription.remove();
+    };
+  }, []);
   const stt = useSpeechRecognition({ countryCode: locationInfo?.countryCode || 'KR' });
 
   useEffect(() => {
@@ -537,6 +587,8 @@ const styles = StyleSheet.create({
   noteSaveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.green, borderRadius: 14, paddingVertical: 14, marginTop: 20 },
   noteSaveBtnText: { color: '#FFF', fontSize: 16, fontWeight: '700' },
 });
+
+
 
 
 
