@@ -2,6 +2,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar, RefreshControl, Alert, Modal, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../utils/supabase';
+import { t } from '../i18n';
 import { useFocusEffect } from '@react-navigation/native';
 
 const COLORS = {
@@ -103,8 +104,8 @@ export default function EvidenceScreen({ navigation, route, duressMode }) {
         </View>
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <Ionicons name="folder-open-outline" size={64} color={COLORS.textSecondary} />
-          <Text style={{ color: COLORS.textSecondary, fontSize: 16, marginTop: 12 }}>No evidence files</Text>
-          <Text style={{ color: COLORS.textSecondary, fontSize: 13, marginTop: 4 }}>Start recording to collect evidence</Text>
+          <Text style={{ color: COLORS.textSecondary, fontSize: 16, marginTop: 12 }}>{t('evidence.no_files')}</Text>
+          <Text style={{ color: COLORS.textSecondary, fontSize: 13, marginTop: 4 }}>{t('evidence.start_recording')}</Text>
         </View>
       </View>
     );
@@ -114,7 +115,7 @@ export default function EvidenceScreen({ navigation, route, duressMode }) {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.bg} />
       <View style={styles.header}>
-        <Text style={styles.title}>Evidence Vault</Text>
+        <Text style={styles.title}>{t('evidence.title')}</Text>
         <Text style={styles.subtitle}>{evidence.length} file(s) secured</Text>
       </View>
 
@@ -134,8 +135,8 @@ export default function EvidenceScreen({ navigation, route, duressMode }) {
             <View style={styles.emptyIconCircle}>
               <Ionicons name="shield-checkmark" size={48} color={COLORS.blue} />
             </View>
-            <Text style={styles.emptyTitle}>No evidence yet</Text>
-            <Text style={styles.emptyDesc}>Your recordings, photos, and notes will appear here.</Text>
+            <Text style={styles.emptyTitle}>{t('evidence.no_yet')}</Text>
+            <Text style={styles.emptyDesc}>{t('evidence.no_yet_desc')}</Text>
           </View>
         ) : (
           filteredEvidence.map((item) => {
@@ -174,13 +175,13 @@ export default function EvidenceScreen({ navigation, route, duressMode }) {
       <Modal visible={showAddModal} transparent animationType="fade" onRequestClose={() => setShowAddModal(false)}>
         <Pressable style={styles.modalOverlay} onPress={() => setShowAddModal(false)}>
           <Pressable style={styles.modalContent} onPress={(e) => e.stopPropagation()}>
-            <Text style={styles.modalTitle}>Add Evidence</Text>
+            <Text style={styles.modalTitle}>{t('evidence.add')}</Text>
 
             <TouchableOpacity style={styles.modalOption} onPress={() => handleAddOption('audio')}>
               <View style={[styles.modalIconCircle, { backgroundColor: COLORS.blue + '20' }]}>
                 <Ionicons name="mic" size={22} color={COLORS.blue} />
               </View>
-              <Text style={styles.modalOptionText}>Audio Recording</Text>
+              <Text style={styles.modalOptionText}>{t('evidence.audio_recording')}</Text>
               <Ionicons name="chevron-forward" size={18} color={COLORS.textSecondary} />
             </TouchableOpacity>
 
@@ -242,6 +243,7 @@ const styles = StyleSheet.create({
   modalCancelBtn: { marginTop: 16, paddingVertical: 14, borderRadius: 12, backgroundColor: COLORS.border, alignItems: 'center' },
   modalCancelText: { fontSize: 16, fontWeight: '600', color: COLORS.textSecondary },
 });
+
 
 
 

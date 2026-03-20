@@ -14,6 +14,7 @@ try { Accelerometer = require('expo-sensors').Accelerometer; } catch(e) {}
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSpeechRecognition } from '../utils/speechRecognition';
+import { t } from '../i18n';
 
 const COLORS = {
   bg: '#071325', card: '#0F2140', blue: '#4D8EFF', green: '#10B981',
@@ -367,7 +368,7 @@ export default function RecordScreen({ navigation, duressMode }) {
           <View style={styles.recordBtn}>
             <Ionicons name="mic" size={36} color="#FFF" />
           </View>
-          <Text style={{ color: COLORS.textSecondary, marginTop: 16 }}>Tap to record</Text>
+          <Text style={{ color: COLORS.textSecondary, marginTop: 16 }}>{t('record.tap_to_record')}</Text>
         </View>
       </View>
     );
@@ -382,14 +383,14 @@ export default function RecordScreen({ navigation, duressMode }) {
           <View style={styles.toggleRow}>
             <View style={styles.stealthRow}>
               <Ionicons name="eye-off" size={14} color={COLORS.textSecondary} />
-              <Text style={styles.toggleLabel}> Stealth</Text>
+              <Text style={styles.toggleLabel}> {t('record.stealth')}</Text>
               <Switch value={stealthMode} onValueChange={setStealthMode}
                 trackColor={{ false: COLORS.border, true: COLORS.blue + '60' }}
                 thumbColor={stealthMode ? COLORS.blue : '#555'} style={{ marginLeft: 4, transform: [{ scale: 0.8 }] }} />
             </View>
             <View style={styles.stealthRow}>
               <Ionicons name="cloud-upload" size={14} color={streamingMode ? COLORS.green : COLORS.textSecondary} />
-              <Text style={[styles.toggleLabel, streamingMode && { color: COLORS.green }]}> Live</Text>
+              <Text style={[styles.toggleLabel, streamingMode && { color: COLORS.green }]}> {t('record.live')}</Text>
               <Switch value={streamingMode} onValueChange={setStreamingMode}
                 trackColor={{ false: COLORS.border, true: COLORS.green + '60' }}
                 thumbColor={streamingMode ? COLORS.green : '#555'} style={{ marginLeft: 4, transform: [{ scale: 0.8 }] }} />
@@ -457,7 +458,7 @@ export default function RecordScreen({ navigation, duressMode }) {
         <View style={styles.actionRow}>
           <TouchableOpacity style={styles.actionBtn} onPress={takePhoto}>
             <Ionicons name="camera" size={22} color={COLORS.blue} />
-            <Text style={styles.actionLabel}>Photo</Text>
+            <Text style={styles.actionLabel}>{t('record.photo')}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={() => setShowNoteModal(true)}>
             <Ionicons name="create" size={22} color={COLORS.purple} />
@@ -492,7 +493,7 @@ export default function RecordScreen({ navigation, duressMode }) {
           <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowNoteModal(false)}>
             <TouchableOpacity activeOpacity={1} style={styles.noteModal} onPress={() => {}}>
               <View style={styles.noteHeader}>
-                <Text style={styles.noteHeaderTitle}>Add Note</Text>
+                <Text style={styles.noteHeaderTitle}>{t('record.add_note')}</Text>
                 <TouchableOpacity onPress={() => setShowNoteModal(false)}>
                   <Ionicons name="close" size={24} color={COLORS.textSecondary} />
                 </TouchableOpacity>
@@ -592,6 +593,7 @@ const styles = StyleSheet.create({
   noteSaveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.green, borderRadius: 14, paddingVertical: 14, marginTop: 20 },
   noteSaveBtnText: { color: '#FFF', fontSize: 16, fontWeight: '700' },
 });
+
 
 
 

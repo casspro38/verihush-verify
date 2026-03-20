@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { getCurrentLocation } from '../utils/location';
 import { supabase } from '../utils/supabase';
+import { t } from '../i18n';
 
 const { width } = Dimensions.get('window');
 const COLORS = {
@@ -246,8 +247,8 @@ export default function HomeScreen({ navigation, duressMode }) {
           <View style={styles.shieldCircle}>
             <Ionicons name="shield-checkmark" size={48} color={COLORS.green} />
           </View>
-          <Text style={styles.heroTitle}>Your voice never disappears</Text>
-          <Text style={styles.heroTagline}>Record it. Lock it. Prove it.</Text>
+          <Text style={styles.heroTitle}>{t('home.hero_title')}</Text>
+          <Text style={styles.heroTagline}>{t('home.hero_tagline')}</Text>
           <Text style={styles.heroSubtitle}>
             Protect yourself in disputes, harassment, or emergencies.{'\n'}
             Your recordings are safely backed up and can never be altered.
@@ -260,15 +261,15 @@ export default function HomeScreen({ navigation, duressMode }) {
             <View style={[styles.pillarIcon, { backgroundColor: COLORS.blue + '20' }]}>
               <Ionicons name="cloud-upload" size={22} color={COLORS.blue} />
             </View>
-            <Text style={styles.pillarTitle}>Always{'\n'}Saved</Text>
-            <Text style={styles.pillarDesc}>Your evidence is backed up instantly — even if your phone breaks</Text>
+            <Text style={styles.pillarTitle}>{t('home.always_saved')}</Text>
+            <Text style={styles.pillarDesc}>{t('home.always_saved_desc')}</Text>
           </View>
           <View style={styles.pillarCard}>
             <View style={[styles.pillarIcon, { backgroundColor: COLORS.green + '20' }]}>
               <Ionicons name="lock-closed" size={22} color={COLORS.green} />
             </View>
-            <Text style={styles.pillarTitle}>Can't Be{'\n'}Changed</Text>
-            <Text style={styles.pillarDesc}>No one can edit or fake your recordings — not even you</Text>
+            <Text style={styles.pillarTitle}>{t('home.cant_be_changed')}</Text>
+            <Text style={styles.pillarDesc}>{t('home.cant_be_changed_desc')}</Text>
           </View>
           <View style={styles.pillarCard}>
             <View style={[styles.pillarIcon, { backgroundColor: COLORS.purple + '20' }]}>
@@ -471,6 +472,7 @@ const styles = StyleSheet.create({
   },
   quickLabel: { color: COLORS.textPrimary, fontSize: 12, fontWeight: '600' },
 });
+
 
 
 

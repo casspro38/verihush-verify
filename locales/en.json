@@ -21,10 +21,55 @@
     "pins_not_match": "PINs do not match. Try again."
   },
   "home": {
-    "start_recording": "Start Recording",
-    "stop_recording": "Stop Recording",
-    "recording_in_progress": "Recording in progress...",
-    "evidence_saved": "Evidence saved successfully"
+    "welcome": "Welcome back",
+    "subtitle": "Your quiet witness",
+    "audio": "Audio",
+    "photos": "Photos",
+    "reports": "Reports",
+    "storage": "Storage",
+    "getting_started": "Getting Started",
+    "getting_started_desc": "Tap the Record tab to start collecting audio evidence. All recordings are automatically encrypted and backed up.",
+    "protection_status": "Protection Status",
+    "evidence_integrity": "Evidence Integrity: Active",
+    "cloud_backup": "Cloud Backup: Connected",
+    "app_lock": "App Lock: Enabled",
+    "hero_title": "Your voice never disappears",
+    "hero_tagline": "Record it. Lock it. Prove it.",
+    "always_saved": "Always\nSaved",
+    "always_saved_desc": "Your evidence is backed up instantly — even if your phone breaks",
+    "cant_be_changed": "Can't Be\nChanged",
+    "cant_be_changed_desc": "No one can edit or fake your recordings — not even you",
+    "recording_legal": "Recording is legal here",
+    "permission_needed": "Permission needed to record"
+  },
+  "record": {
+    "title": "Record",
+    "tap_to_record": "Tap to record",
+    "stealth": "Stealth",
+    "live": "Live",
+    "photo": "Photo",
+    "note": "Note",
+    "add_note": "Add Note",
+    "transcript_hint": "Transcript will appear here during recording...",
+    "tap_to_start": "Tap to start recording",
+    "recording_active": "Recording in progress..."
+  },
+  "evidence": {
+    "title": "Evidence Vault",
+    "no_files": "No evidence files",
+    "start_recording": "Start recording to collect evidence",
+    "secured": "file(s) secured",
+    "no_yet": "No evidence yet",
+    "no_yet_desc": "Your recordings, photos, and notes will appear here.",
+    "add": "Add Evidence",
+    "audio_recording": "Audio Recording",
+    "photo_option": "Photo",
+    "note_option": "Note (Coming Soon)",
+    "cancel": "Cancel",
+    "all": "All",
+    "audio": "Audio",
+    "photo": "Photo",
+    "notes": "Notes"
   },
   "settings": {
     "title": "Settings",
@@ -32,7 +77,14 @@
     "duress_pin": "Duress PIN",
     "biometric": "Biometric Unlock",
     "shake_to_record": "Shake to Record",
-    "sign_out": "Sign Out"
+    "sign_out": "Sign Out",
+    "quick_actions": "Quick Actions",
+    "shake_desc": "Shake your phone 3 times to start recording instantly",
+    "security": "Security",
+    "pin_lock": "PIN Lock",
+    "change_pin": "Change PIN",
+    "hidden_safety": "Hidden Safety",
+    "emergency_contact": "Emergency Contact"
   },
   "common": {
     "cancel": "Cancel",
@@ -43,4 +95,3 @@
     "no": "No"
   }
 }
-
