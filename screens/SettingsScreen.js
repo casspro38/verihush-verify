@@ -6,6 +6,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { supabase } from '../utils/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LockScreen, { hasPinSet, clearPIN, isBiometricEnabled, setBiometric, saveDuressPIN, getDuressPIN, clearDuressPIN, saveEmergencyContact, getEmergencyContact } from './LockScreen';
 
 const COLORS = {
@@ -713,6 +714,7 @@ const styles = StyleSheet.create({
   upgradeDesc: { color: COLORS.textSecondary, fontSize: 11, marginTop: 2 },
   upgradePrice: { color: COLORS.blue, fontSize: 15, fontWeight: '800' },
 });
+
 
 
 

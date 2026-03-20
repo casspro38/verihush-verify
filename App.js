@@ -9,6 +9,8 @@ import { supabase } from './utils/supabase';
 
 import AuthScreen from './screens/AuthScreen';
 import LockScreen, { hasPinSet } from './screens/LockScreen';
+import OnboardingScreen from './screens/OnboardingScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeScreen from './screens/HomeScreen';
 import RecordScreen from './screens/RecordScreen';
 import EvidenceScreen from './screens/EvidenceScreen';
@@ -86,6 +88,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [locked, setLocked] = useState(false);
   const [duressMode, setDuressMode] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(null);
   const [pinExists, setPinExists] = useState(false);
   const backgroundTimeRef = useRef(null);
 
@@ -143,6 +146,17 @@ export default function App() {
     );
   }
 
+  if (showOnboarding) {
+    return (
+      <SafeAreaProvider>
+        <OnboardingScreen onDone={async () => {
+          await AsyncStorage.setItem('verihush_onboarded', 'true');
+          setShowOnboarding(false);
+        }} />
+      </SafeAreaProvider>
+    );
+  }
+
   if (!session) {
     return (
       <SafeAreaProvider>
@@ -167,6 +181,14 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
+
+
+
+
+
+
+
+
 
 
 
